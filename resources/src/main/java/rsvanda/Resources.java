@@ -18,9 +18,16 @@ public class Resources {
 
     public static Stream<String> readLines(String resourceName) {
         try {
-            URI uri = Objects.requireNonNull(Resources.class.getResource(resourceName)).toURI();
-            return Files.lines(Path.of(uri));
-        } catch (URISyntaxException | IOException e) {
+            return Files.lines(Path.of(resourceURI(resourceName)));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static URI resourceURI(String resourceName) {
+        try {
+            return Objects.requireNonNull(Resources.class.getResource(resourceName)).toURI();
+        } catch (URISyntaxException e) {
             throw new IllegalStateException(e);
         }
     }
