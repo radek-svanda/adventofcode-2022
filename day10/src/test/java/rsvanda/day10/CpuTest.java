@@ -32,7 +32,7 @@ class CpuTest {
         cpu.execute(1);
         assertEquals(Instruction.Addx.class, cpu.current().getClass());
         assertTrue(cpu.current().finished());
-        assertEquals(4, cpu.x());
+        assertEquals(1, cpu.x());
 
         cpu.execute(1);
         assertEquals(Instruction.Addx.class, cpu.current().getClass());
@@ -42,7 +42,7 @@ class CpuTest {
         cpu.execute(1);
         assertEquals(Instruction.Addx.class, cpu.current().getClass());
         assertTrue(cpu.current().finished());
-        assertEquals(-1, cpu.x());
+        assertEquals(4, cpu.x());
 
         assertEquals(5, cpu.cycles());
     }
@@ -82,6 +82,43 @@ class CpuTest {
         assertEquals(3960, cpu.signal());
 
     }
+
+    @Test
+    void executeTo() {
+        List<Instruction> instructions = Instruction.parse(Strings.stringToStream(source));
+        Cpu cpu = new Cpu(instructions);
+
+        cpu.executeTo(20);
+        assertEquals(20, cpu.cycles());
+        assertEquals(21, cpu.x());
+        assertEquals(420, cpu.signal());
+
+        cpu.executeTo(60);
+        assertEquals(60, cpu.cycles());
+        assertEquals(19, cpu.x());
+        assertEquals(1140, cpu.signal());
+
+        cpu.executeTo(100);
+        assertEquals(100, cpu.cycles());
+        assertEquals(18, cpu.x());
+        assertEquals(1800, cpu.signal());
+
+        cpu.executeTo(140);
+        assertEquals(140, cpu.cycles());
+        assertEquals(21, cpu.x());
+        assertEquals(2940, cpu.signal());
+
+        cpu.executeTo(180);
+        assertEquals(180, cpu.cycles());
+        assertEquals(16, cpu.x());
+        assertEquals(16 * 180, cpu.signal());
+
+        cpu.executeTo(220);
+        assertEquals(220, cpu.cycles());
+        assertEquals(18, cpu.x());
+        assertEquals(3960, cpu.signal());
+    }
+
 
     private final String source = """
             addx 15

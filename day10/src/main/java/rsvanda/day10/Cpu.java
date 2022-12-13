@@ -6,6 +6,7 @@ import java.util.List;
 public class Cpu {
 
     private int x = 1;
+    private int next = 1;
 
     private final LinkedList<Instruction> instructions;
 
@@ -19,12 +20,17 @@ public class Cpu {
 
     void execute(int cycles) {
         for (int i = 0; i < cycles; i++) {
+            x = next;
             if (current == null || current.finished()) {
                 current = instructions.removeFirst();
             }
             current.tick(this);
             this.cycles += 1;
         }
+    }
+
+    void executeTo(int cycle) {
+        execute(cycle - this.cycles);
     }
 
     public Instruction current() {
@@ -36,7 +42,7 @@ public class Cpu {
     }
 
     public void x(int value) {
-        x = value;
+        next = value;
     }
 
     public int cycles() {
