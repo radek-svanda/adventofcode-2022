@@ -2,6 +2,8 @@ package rsvanda.day09;
 
 import java.util.stream.IntStream;
 
+import static java.lang.Math.abs;
+
 public record Cell(int x, int y) {
 
     public static final Cell start = cell(0, 0);
@@ -15,8 +17,12 @@ public record Cell(int x, int y) {
         };
     }
 
-    private int middle(int a, int b) {
-        return (int) Math.ceil((double) (a + b) / 2);
+    private int middle(int what, int where) {
+        if ((abs(where - what) % 2) == 0) {
+            return (what + where) / 2;
+        } else {
+            return where;
+        }
     }
 
 
@@ -24,7 +30,10 @@ public record Cell(int x, int y) {
         if (this.borders(other)) {
             return this;
         } else {
-            return cell(middle(other.x, x), middle(other.y, y));
+            return cell(
+                    middle(x, other.x),
+                    middle(y, other.y)
+            );
         }
     }
 

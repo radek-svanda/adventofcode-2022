@@ -4,7 +4,7 @@ public class Rope {
 
     private final Knot tail;
 
-    private Cell position;
+    private Cell position = Cell.start;
 
     public Rope(Knot tail) {
         this.tail = tail;
@@ -37,4 +37,7 @@ public class Rope {
         return new Rope(knot);
     }
 
+    public Cell getPosition() {
+        return position;
+    }
 }

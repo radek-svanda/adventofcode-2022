@@ -30,7 +30,8 @@ class CellTest {
                 () -> assertEquals(cell(2, 2), cell(1, 1).moveTo(cell(2, 3))),
                 () -> assertEquals(cell(2, 2), cell(1, 1).moveTo(cell(3, 2))),
 
-                () -> assertEquals(cell(1, 1), cell(0, 0).moveTo(cell(2, 2)))
+                () -> assertEquals(cell(1, 1), cell(0, 0).moveTo(cell(2, 2))),
+                () -> assertEquals(cell(3, 3), cell(2, 4).moveTo(cell(4, 3)))
         );
     }
 

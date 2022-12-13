@@ -10,10 +10,12 @@ public class Day09 {
 
         path.moves().forEach(rope::move);
 
+        // 6406
         System.out.println(tail.getVisited().size());
 
         Rope longer = Rope.length(9);
         path.moves().forEach(longer::move);
+        // 2643
         System.out.println(longer.getTail().getVisited().size());
     }
 

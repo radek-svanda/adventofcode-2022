@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class RopeTest {
 
     @Test
@@ -25,9 +27,20 @@ class RopeTest {
 
         Path path = Path.read(new ByteArrayInputStream(source.getBytes()));
 
-        path.moves().forEach(rope::move);
+        path.moves().forEach(move -> {
 
-        System.out.println(rope.getTail().getVisited().size());
+            rope.move(move);
+            System.out.println(rope.getPosition());
+            System.out.println(rope.getTail().getVisited().size());
+            TailDump.dump(rope.getTail());
+
+            System.out.println();
+
+        });
+
+        assertEquals(13, rope.getTail().getVisited().size());
+
+        TailDump.dump(rope.getTail());
 
     }
 
@@ -50,7 +63,9 @@ class RopeTest {
 
         path.moves().forEach(rope::move);
 
-        System.out.println(rope.getTail().getVisited().size());
+        assertEquals(1, rope.getTail().getVisited().size());
+
+        TailDump.dump(rope.getTail());
     }
 
     @Test
@@ -70,7 +85,10 @@ class RopeTest {
 
         path.moves().forEach(rope::move);
 
-        System.out.println(rope.getTail().getVisited().size());
+        assertEquals(36, rope.getTail().getVisited().size());
+
+        TailDump.dump(rope.getTail());
+
     }
 
 }
