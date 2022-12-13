@@ -5,12 +5,16 @@ public class Day09 {
 
     public static void main(String[] args) {
         Path path = Path.read(Day09.class.getResourceAsStream("/input.txt"));
-        Tail tail = new Tail();
-        Head head = new Head(tail);
+        Knot tail = new Knot();
+        Rope rope = new Rope(tail);
 
-        path.moves().forEach(head::move);
+        path.moves().forEach(rope::move);
 
         System.out.println(tail.getVisited().size());
+
+        Rope longer = Rope.length(9);
+        path.moves().forEach(longer::move);
+        System.out.println(longer.getTail().getVisited().size());
     }
 
 }

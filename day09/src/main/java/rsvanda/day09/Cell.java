@@ -15,16 +15,16 @@ public record Cell(int x, int y) {
         };
     }
 
+    private int middle(int a, int b) {
+        return (int) Math.ceil((double) (a + b) / 2);
+    }
+
+
     public Cell moveTo(Cell other) {
         if (this.borders(other)) {
             return this;
         } else {
-            if (Math.abs(other.x - x) > 1) {
-                return cell(other.x > x ? other.x - 1 : other.x + 1, other.y);
-            } else if (Math.abs(other.y - y) > 1) {
-                return cell(other.x, other.y > y ? other.y - 1 : other.y + 1);
-            }
-            throw new IllegalStateException();
+            return cell(middle(other.x, x), middle(other.y, y));
         }
     }
 
