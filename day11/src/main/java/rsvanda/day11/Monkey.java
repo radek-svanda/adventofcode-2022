@@ -3,9 +3,7 @@ package rsvanda.day11;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.LongFunction;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public class Monkey {
 
@@ -19,8 +17,6 @@ public class Monkey {
 
     private final Consumer<Item> onFalse;
 
-    private final LongFunction<Long> relief;
-
     private int totalInspects = 0;
 
     public Monkey(
@@ -28,23 +24,25 @@ public class Monkey {
             Predicate<Long> test,
             LongFunction<Long> operation,
             Consumer<Item> onTrue,
-            Consumer<Item> onFalse, LongFunction<Long> relief) {
+            Consumer<Item> onFalse
+    ) {
         this.items = new LinkedList<>(items);
         this.test = test;
         this.operation = operation;
         this.onTrue = onTrue;
         this.onFalse = onFalse;
-        this.relief = relief;
     }
 
     public void addItem(Item item) {
         this.items.addLast(item);
     }
 
-    public void inspectAll() {
+    public void inspectAll(LongUnaryOperator reduce) {
         while (!items.isEmpty()) {
             Item item = items.removeFirst();
-            item.worryLevel(relief.apply(operation.apply(item.worryLevel())));
+            item.worryLevel(
+                    reduce.applyAsLong(operation.apply(item.worryLevel()))
+            );
             if (test.test(item.worryLevel())) {
                 onTrue.accept(item);
             } else {

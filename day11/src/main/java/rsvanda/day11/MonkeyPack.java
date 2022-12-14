@@ -1,19 +1,13 @@
 package rsvanda.day11;
 
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.LongFunction;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public class MonkeyPack implements Iterable<Monkey> {
 
     private final List<Monkey> monkeys = new ArrayList<>();
 
-    private LongFunction<Long> relief = (value -> value / 3);
-
-    public void add(Monkey monkey) {
-        this.monkeys.add(monkey);
-    }
+    private long lmc = 1;
 
     public void add(Consumer<MonkeyBuilder> consumer) {
         MonkeyBuilder monkeyBuilder = new MonkeyBuilder();
@@ -45,8 +39,8 @@ public class MonkeyPack implements Iterable<Monkey> {
                 .orElseThrow();
     }
 
-    public void setRelief(LongFunction<Long> relief) {
-        this.relief = relief;
+    public LongUnaryOperator worryReducer() {
+        return a -> a % lmc;
     }
 
     public class MonkeyBuilder {
@@ -60,6 +54,9 @@ public class MonkeyPack implements Iterable<Monkey> {
         private Consumer<Item> onTrue;
 
         private Consumer<Item> onFalse;
+
+        private MonkeyBuilder() {
+        }
 
         public MonkeyBuilder items(Integer... levels) {
             this.items = Arrays.stream(levels)
@@ -89,11 +86,13 @@ public class MonkeyPack implements Iterable<Monkey> {
         }
 
         public Monkey build() {
-            return new Monkey(items, test, operation, onTrue, onFalse, relief);
+            return new Monkey(items, test, operation, onTrue, onFalse);
         }
 
-        public static Predicate<Long> divisibleBy(int by) {
-            return value -> (value % by) == 0;
+        public MonkeyBuilder divisibleBy(int by) {
+            this.test = value -> (value % by) == 0;
+            lmc *= by;
+            return this;
         }
 
         public static LongFunction<Long> times(int value) {

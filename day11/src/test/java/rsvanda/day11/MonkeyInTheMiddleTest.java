@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import static rsvanda.day11.Dumper.dumpWithInspections;
 import static rsvanda.day11.Dumper.dumpWithItems;
-import static rsvanda.day11.MonkeyPack.MonkeyBuilder.divisibleBy;
 import static rsvanda.day11.MonkeyPack.MonkeyBuilder.times;
 
 class MonkeyInTheMiddleTest {
@@ -15,28 +14,28 @@ class MonkeyInTheMiddleTest {
         pack.add(it -> it
                 .items(79, 98)
                 .operation(times(19))
-                .test(divisibleBy(23))
+                .divisibleBy(23)
                 .onTrue(2)
                 .onFalse(3)
         );
         pack.add(it -> it
                 .items(54, 65, 75, 74)
                 .operation(old -> old + 6)
-                .test(divisibleBy(19))
+                .divisibleBy(19)
                 .onTrue(2)
                 .onFalse(0)
         );
         pack.add(it -> it
                 .items(79, 60, 97)
                 .operation(old -> old * old)
-                .test(divisibleBy(13))
+                .divisibleBy(13)
                 .onTrue(1)
                 .onFalse(3)
         );
         pack.add(it -> it
                 .items(74)
                 .operation(old -> old + 3)
-                .test(divisibleBy(17))
+                .divisibleBy(17)
                 .onTrue(0)
                 .onFalse(1)
         );
@@ -51,7 +50,10 @@ class MonkeyInTheMiddleTest {
         MonkeyPack pack = new MonkeyPack();
         addMonkeys(pack);
 
-        var game = new MonkeyInTheMiddle(pack);
+        var game = new MonkeyInTheMiddle(pack,
+                pack.worryReducer().andThen(MonkeyInTheMiddle.INITIAL_RELIEF)
+        );
+
         game.iterate();
 
         dumpWithItems(pack);
@@ -73,10 +75,10 @@ class MonkeyInTheMiddleTest {
     void longTest() {
 
         MonkeyPack pack = new MonkeyPack();
-        pack.setRelief(value -> value);
         addMonkeys(pack);
 
-        var game = new MonkeyInTheMiddle(pack);
+        var game = new MonkeyInTheMiddle(pack, pack.worryReducer());
+
         game.iterate();
 
         dumpWithInspections(pack);
@@ -84,20 +86,10 @@ class MonkeyInTheMiddleTest {
         game.iterateTo(1000);
         dumpWithInspections(pack);
 
-//        game.iterateTo(10000);
-//        dumpWithInspections(pack);
+        game.iterateTo(10000);
+        dumpWithInspections(pack);
 
-//        game.iterate();
-//        dump(pack);
-//
-//        game.iterateTo(9);
-//        dump(pack);
-//        game.iterateTo(15);
-//        dump(pack);
-//        game.iterateTo(20);
-//        dump(pack);
-
-//        Assertions.assertEquals(2713310158L, pack.totalMonkeyBusiness());
+        Assertions.assertEquals(2713310158L, pack.totalMonkeyBusiness());
     }
 
 
