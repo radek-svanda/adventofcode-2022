@@ -3,7 +3,7 @@ package rsvanda.day10;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Cpu {
+public class Cpu implements Timed {
 
     private int x = 1;
     private int next = 1;
@@ -18,19 +18,14 @@ public class Cpu {
         this.instructions = new LinkedList<>(instructions);
     }
 
-    void execute(int cycles) {
-        for (int i = 0; i < cycles; i++) {
-            x = next;
-            if (current == null || current.finished()) {
-                current = instructions.removeFirst();
-            }
-            current.tick(this);
-            this.cycles += 1;
+    @Override
+    public void tick() {
+        x = next;
+        if (current == null || current.finished()) {
+            current = instructions.removeFirst();
         }
-    }
-
-    void executeTo(int cycle) {
-        execute(cycle - this.cycles);
+        current.tick(this);
+        this.cycles += 1;
     }
 
     public Instruction current() {

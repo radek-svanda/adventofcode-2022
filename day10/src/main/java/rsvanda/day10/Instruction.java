@@ -37,11 +37,11 @@ abstract class Instruction {
         return ticks >= duration();
     }
 
-    abstract int duration();
+    public abstract int duration();
 
     public static class Noop extends Instruction {
         @Override
-        int duration() {
+        public int duration() {
             return 1;
         }
     }
@@ -58,7 +58,7 @@ abstract class Instruction {
         }
 
         @Override
-        int duration() {
+        public int duration() {
             return 2;
         }
 

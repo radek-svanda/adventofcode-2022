@@ -18,28 +18,29 @@ class CpuTest {
                 """;
         List<Instruction> list = Instruction.parse(Strings.stringToStream(source));
         Cpu cpu = new Cpu(list);
+        Clock clock = new Clock(List.of(cpu));
 
-        cpu.execute(1);
+        clock.tick(1);
         assertEquals(Instruction.Noop.class, cpu.current().getClass());
         assertTrue(cpu.current().finished());
         assertEquals(1, cpu.x());
 
-        cpu.execute(1);
+        clock.tick(1);
         assertEquals(Instruction.Addx.class, cpu.current().getClass());
         assertFalse(cpu.current().finished());
         assertEquals(1, cpu.x());
 
-        cpu.execute(1);
+        clock.tick(1);
         assertEquals(Instruction.Addx.class, cpu.current().getClass());
         assertTrue(cpu.current().finished());
         assertEquals(1, cpu.x());
 
-        cpu.execute(1);
+        clock.tick(1);
         assertEquals(Instruction.Addx.class, cpu.current().getClass());
         assertFalse(cpu.current().finished());
         assertEquals(4, cpu.x());
 
-        cpu.execute(1);
+        clock.tick(1);
         assertEquals(Instruction.Addx.class, cpu.current().getClass());
         assertTrue(cpu.current().finished());
         assertEquals(4, cpu.x());
@@ -50,33 +51,34 @@ class CpuTest {
     void longExecution() {
         List<Instruction> instructions = Instruction.parse(Strings.stringToStream(source));
         Cpu cpu = new Cpu(instructions);
+        Clock clock = new Clock(List.of(cpu));
 
-        cpu.execute(20);
+        clock.tick(20);
         assertEquals(20, cpu.cycles());
         assertEquals(21, cpu.x());
         assertEquals(420, cpu.signal());
 
-        cpu.execute(40);
+        clock.tick(40);
         assertEquals(60, cpu.cycles());
         assertEquals(19, cpu.x());
         assertEquals(1140, cpu.signal());
 
-        cpu.execute(40);
+        clock.tick(40);
         assertEquals(100, cpu.cycles());
         assertEquals(18, cpu.x());
         assertEquals(1800, cpu.signal());
 
-        cpu.execute(40);
+        clock.tick(40);
         assertEquals(140, cpu.cycles());
         assertEquals(21, cpu.x());
         assertEquals(2940, cpu.signal());
 
-        cpu.execute(40);
+        clock.tick(40);
         assertEquals(180, cpu.cycles());
         assertEquals(16, cpu.x());
         assertEquals(16 * 180, cpu.signal());
 
-        cpu.execute(40);
+        clock.tick(40);
         assertEquals(220, cpu.cycles());
         assertEquals(18, cpu.x());
         assertEquals(3960, cpu.signal());
@@ -87,33 +89,34 @@ class CpuTest {
     void executeTo() {
         List<Instruction> instructions = Instruction.parse(Strings.stringToStream(source));
         Cpu cpu = new Cpu(instructions);
+        Clock clock = new Clock(List.of(cpu));
 
-        cpu.executeTo(20);
+        clock.tickTo(20);
         assertEquals(20, cpu.cycles());
         assertEquals(21, cpu.x());
         assertEquals(420, cpu.signal());
 
-        cpu.executeTo(60);
+        clock.tickTo(60);
         assertEquals(60, cpu.cycles());
         assertEquals(19, cpu.x());
         assertEquals(1140, cpu.signal());
 
-        cpu.executeTo(100);
+        clock.tickTo(100);
         assertEquals(100, cpu.cycles());
         assertEquals(18, cpu.x());
         assertEquals(1800, cpu.signal());
 
-        cpu.executeTo(140);
+        clock.tickTo(140);
         assertEquals(140, cpu.cycles());
         assertEquals(21, cpu.x());
         assertEquals(2940, cpu.signal());
 
-        cpu.executeTo(180);
+        clock.tickTo(180);
         assertEquals(180, cpu.cycles());
         assertEquals(16, cpu.x());
         assertEquals(16 * 180, cpu.signal());
 
-        cpu.executeTo(220);
+        clock.tickTo(220);
         assertEquals(220, cpu.cycles());
         assertEquals(18, cpu.x());
         assertEquals(3960, cpu.signal());
