@@ -8,13 +8,15 @@ public final class Node {
 
     private final char value;
 
-    private int pathLength = Integer.MIN_VALUE;
-
     private final boolean start;
 
     private final boolean end;
 
     private final List<Node> nextNodes = new ArrayList<>(4);
+
+    private Node parent;
+
+    private boolean visited = false;
 
     public Node(int x, int y, char value) {
         this.x = x;
@@ -37,40 +39,15 @@ public final class Node {
     }
 
     public boolean visited() {
-        return this.pathLength > 0;
+        return this.visited;
     }
 
-    public boolean impossible() {
-        return this.pathLength == Integer.MAX_VALUE;
-    }
-
-    public int getPathLength() {
-        return this.getPathLength(new LinkedList<>());
-    }
-
-    private int getPathLength(Deque<Node> parents) {
-        if (visited()) {
-            return pathLength;
-        }
-
-        if (nextNodes.stream().anyMatch(Node::isEnd)) {
-            pathLength = 1;
-        } else {
-            parents.addLast(this);
-            System.out.println(".".repeat(parents.size()));
-            pathLength = nextNodes.stream()
-                    .filter(it -> !parents.contains(it))
-                    .mapToInt(it -> it.getPathLength(parents))
-                    .min()
-                    .orElse(Integer.MAX_VALUE) + 1;
-            parents.removeLast();
-        }
-
-        return pathLength;
+    public void visited(boolean value) {
+        this.visited = value;
     }
 
     public void addNext(Node next) {
-        if (!nextNodes.contains(next) && canBeNext(next.value)) {
+        if (!nextNodes.contains(next) && canFollow(next.value)) {
             nextNodes.add(next);
         }
     }
@@ -83,8 +60,21 @@ public final class Node {
         return start;
     }
 
-    private boolean canBeNext(char other) {
+    private boolean canFollow(char other) {
         return this.value + 1 >= other;
+    }
+
+    public List<Node> getNextNodes() {
+        return nextNodes;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public Node setParent(Node parent) {
+        this.parent = parent;
+        return this;
     }
 
     @Override
@@ -108,5 +98,18 @@ public final class Node {
                 ", y=" + y +
                 ", value=" + value +
                 '}';
+    }
+
+    public static int countParents(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        Node parent = node.getParent();
+        int cnt = 0;
+        while (parent != null) {
+            parent = parent.getParent();
+            cnt += 1;
+        }
+        return cnt;
     }
 }

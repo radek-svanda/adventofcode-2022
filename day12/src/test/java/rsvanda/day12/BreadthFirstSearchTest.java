@@ -3,11 +3,9 @@ package rsvanda.day12;
 import org.junit.jupiter.api.Test;
 import rsvanda.Strings;
 
-import java.util.LinkedList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-class PathTreeTest {
+class BreadthFirstSearchTest {
 
     private String example = """
             Sabqponm
@@ -18,11 +16,10 @@ class PathTreeTest {
             """;
 
     @Test
-    void testConstruction() {
+    void testExecution() {
         PathTree tree = PathTree.read(Strings.stringToStream(example));
-        assertEquals(0, tree.start().x());
-        assertEquals(0, tree.start().y());
-        assertEquals(40, tree.size());
+        var strategy = new BreadthFirstSearch();
+        var end = strategy.findEnd(tree.start());
+        assertEquals(31, Node.countParents(end));
     }
-
 }
