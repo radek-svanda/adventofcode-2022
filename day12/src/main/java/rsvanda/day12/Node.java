@@ -16,7 +16,7 @@ public final class Node {
 
     private Node parent;
 
-    private boolean visited = false;
+//    private boolean visited = false;
 
     public Node(int x, int y, char value) {
         this.x = x;
@@ -38,13 +38,13 @@ public final class Node {
         return y;
     }
 
-    public boolean visited() {
-        return this.visited;
-    }
+//    public boolean visited() {
+//        return this.visited;
+//    }
 
-    public void visited(boolean value) {
-        this.visited = value;
-    }
+//    public void visited(boolean value) {
+//        this.visited = value;
+//    }
 
     public void addNext(Node next) {
         if (!nextNodes.contains(next) && canFollow(next.value)) {
@@ -75,6 +75,10 @@ public final class Node {
     public Node setParent(Node parent) {
         this.parent = parent;
         return this;
+    }
+
+    public char getValue() {
+        return value;
     }
 
     @Override

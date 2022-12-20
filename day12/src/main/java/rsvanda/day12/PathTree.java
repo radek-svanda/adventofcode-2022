@@ -4,6 +4,8 @@ import rsvanda.Grids;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class PathTree {
 
@@ -14,7 +16,11 @@ public class PathTree {
     }
 
     public Node start() {
-        return nodes.stream().filter(Node::isStart).findFirst().orElseThrow();
+        return nodes(Node::isStart).findFirst().orElseThrow();
+    }
+
+    public Stream<Node> nodes(Predicate<Node> predicate) {
+        return nodes.stream().filter(predicate);
     }
 
     public int size() {
