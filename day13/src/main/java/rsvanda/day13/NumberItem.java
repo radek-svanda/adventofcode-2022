@@ -1,9 +1,16 @@
 package rsvanda.day13;
 
-public record NumberItem(int value) implements Item {
+public final class NumberItem extends Item {
+
+    private final int value;
+
+    public NumberItem(int value) {
+        this.value = value;
+    }
+
     @Override
     public String asString() {
-        return String.valueOf(value);
+        return String.valueOf(this.value);
     }
 
     @Override
@@ -13,6 +20,10 @@ public record NumberItem(int value) implements Item {
 
     @Override
     public int compareTo(Item o) {
-        return asList().compareTo(o.asList());
+        if (o instanceof ListItem other) {
+            return asList().compareTo(other);
+        } else {
+            return value - ((NumberItem) o).value;
+        }
     }
 }

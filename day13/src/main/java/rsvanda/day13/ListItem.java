@@ -1,10 +1,12 @@
 package rsvanda.day13;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public final class ListItem implements Item {
+public final class ListItem extends Item {
 
     private final List<Item> items = new ArrayList<>();
 
@@ -25,11 +27,14 @@ public final class ListItem implements Item {
     public int compareTo(Item o) {
         if (o instanceof ListItem other) {
             for (int i = 0; i < items.size() && i < other.items.size(); i++) {
-
+                int compare = items.get(i).compareTo(other.items.get(i));
+                if (compare != 0) {
+                    return compare;
+                }
             }
-            return -1;
+            return items.size() - other.items.size();
         } else {
-            throw new IllegalArgumentException("Incomparable with " + o);
+            return compareTo(o.asList());
         }
     }
 
@@ -38,4 +43,49 @@ public final class ListItem implements Item {
         list.add(item);
         return list;
     }
+
+    public static ListItem read(String source) {
+
+        LinkedList<ListItem> queue = new LinkedList<>();
+
+        ListItem root = null;
+        StringBuilder builder = new StringBuilder();
+
+        Consumer<StringBuilder> append = value -> {
+            int length = builder.length();
+            if (length > 0) {
+                NumberItem item = new NumberItem(Integer.valueOf(builder.toString()));
+                queue.getLast().add(item);
+                builder.delete(0, length);
+            }
+        };
+
+        for (int c : source.chars().toArray()) {
+            switch (c) {
+                case '[' -> {
+                    ListItem list = new ListItem();
+                    if (root == null) {
+                        root = list;
+                    } else {
+                        queue.getLast().add(list);
+                    }
+                    queue.addLast(list);
+                }
+                case ']' -> {
+                    append.accept(builder);
+                    queue.removeLast();
+                }
+                case ',' -> {
+                    append.accept(builder);
+                }
+                default -> {
+                    builder.append((char) c);
+                }
+            }
+        }
+
+        return root;
+
+    }
+
 }

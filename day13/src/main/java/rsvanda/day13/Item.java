@@ -1,9 +1,15 @@
 package rsvanda.day13;
 
-public interface Item extends Comparable<Item> {
+abstract sealed class Item
+        implements Comparable<Item>
+        permits NumberItem, ListItem {
 
-    String asString();
+    abstract String asString();
 
-    ListItem asList();
+    abstract ListItem asList();
 
+    @Override
+    public String toString() {
+        return asString();
+    }
 }
