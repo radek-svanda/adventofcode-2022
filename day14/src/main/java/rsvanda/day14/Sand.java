@@ -16,15 +16,15 @@ public class Sand {
 
     private Edge drop(Edge edge) {
 
-        if (edge.y() > grid.bottom()) {
+        if (grid.bottom() < 0 && edge.y() > grid.lowest()) {
             throw new IllegalStateException("Overflows!");
         }
 
-        if (grid.get(edge.down()).free()) {
+        if (grid.free(edge.down())) {
             return drop(edge.down());
-        } else if (grid.get(edge.left().down()).free()) {
+        } else if (grid.free(edge.left().down())) {
             return drop(edge.left().down());
-        } else if (grid.get(edge.right().down()).free()) {
+        } else if (grid.free(edge.right().down())) {
             return drop(edge.right().down());
         }
 
@@ -50,7 +50,11 @@ public class Sand {
     }
 
     public int dropUntilFull() {
-        return 0;
+        int i = 1;
+        while (drop() != Edge.START) {
+            i++;
+        }
+        return i;
     }
 
 }

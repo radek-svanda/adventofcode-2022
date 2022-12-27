@@ -8,11 +8,13 @@ public class Grid {
 
     private final Map<Edge, Item> cells = new HashMap<>();
 
-    private int bottom = 0;
+    private int lowest = 0;
+
+    private int bottom = -1;
 
     public void addWall(Wall wall) {
         wall.allEdges().forEach(edge -> cells.put(edge, Item.ROCK));
-        bottom = cells.keySet().stream().mapToInt(Edge::y).max().orElse(bottom);
+        lowest = cells.keySet().stream().mapToInt(Edge::y).max().orElse(lowest);
     }
 
     public Item get(Edge edge) {
@@ -22,6 +24,14 @@ public class Grid {
     public Item set(Edge edge, Item type) {
         cells.put(edge, type);
         return type;
+    }
+
+    public boolean free(Edge edge) {
+        if (bottom > 0) {
+            return edge.y() < bottom && get(edge).free();
+        } else {
+            return get(edge).free();
+        }
     }
 
     public Edge min() {
@@ -50,6 +60,14 @@ public class Grid {
         return cells.values().stream()
                 .filter(it -> it == type)
                 .count();
+    }
+
+    public int lowest() {
+        return lowest;
+    }
+
+    public void setBottom(int y) {
+        this.bottom = y;
     }
 
     public int bottom() {

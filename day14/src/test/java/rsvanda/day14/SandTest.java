@@ -38,7 +38,7 @@ class SandTest {
     }
 
     @Test
-    void draw() {
+    void drops() {
 
         assertDrop(new Edge(500, 8));
         assertDrop(new Edge(499, 8));
@@ -60,6 +60,15 @@ class SandTest {
 
         assertTrue(fail);
 
+    }
+
+    @Test
+    void fill() {
+        grid.setBottom(grid.lowest() + 2);
+        assertEquals(9, grid.lowest());
+        assertEquals(11, grid.bottom());
+        assertEquals(93, sand.dropUntilFull());
+        Dump.dump(grid);
     }
 
 }
