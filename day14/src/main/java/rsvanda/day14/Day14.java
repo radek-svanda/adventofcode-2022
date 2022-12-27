@@ -8,24 +8,15 @@ public class Day14 {
 
     public static class Part1 {
 
-        public void solve() {
+        public int solve() {
             List<Wall> walls = Resources.readLines("/input.txt")
                     .map(Wall::parse)
                     .toList();
 
             Grid grid = new Grid();
             walls.forEach(grid::addWall);
-
-            int i = 0;
-            try {
-                while (grid.drop() != null) {
-                    i++;
-                }
-            } catch (IllegalStateException e) {
-                 // 979
-            }
-
-            System.out.println(i);
+            Sand sand = new Sand(grid);
+            return sand.dropUntilOverflow();
         }
 
     }

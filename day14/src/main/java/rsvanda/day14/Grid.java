@@ -2,9 +2,7 @@ package rsvanda.day14;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.ToIntFunction;
-import java.util.stream.IntStream;
 
 public class Grid {
 
@@ -18,40 +16,12 @@ public class Grid {
     }
 
     public Item get(Edge edge) {
-        return Optional.ofNullable(cells.get(edge))
-                .orElseGet(() -> set(edge, Item.AIR));
+        return cells.getOrDefault(edge, Item.AIR);
     }
 
-    private Item set(Edge edge, Item type) {
+    public Item set(Edge edge, Item type) {
         cells.put(edge, type);
         return type;
-    }
-
-    public Edge drop() {
-        return sand(Edge.START);
-    }
-
-    public Edge dropUntil(int cnt) {
-        return IntStream.range((int) sandCount(), cnt).boxed()
-                .reduce(Edge.START, (edge, integer) -> drop(), (edge, edge2) -> edge2);
-    }
-
-    private Edge sand(Edge edge) {
-
-        if (edge.y() > bottom) {
-            throw new IllegalStateException("Overflows!");
-        }
-
-        if (get(edge.down()).free()) {
-            return sand(edge.down());
-        } else if (get(edge.left().down()).free()) {
-            return sand(edge.left().down());
-        } else if (get(edge.right().down()).free()) {
-            return sand(edge.right().down());
-        }
-
-        set(edge, Item.SAND);
-        return edge;
     }
 
     public Edge min() {
@@ -76,10 +46,13 @@ public class Grid {
         return cells.keySet().stream().mapToInt(fn).max().orElse(0);
     }
 
-    private long sandCount() {
+    public long getCount(Item type) {
         return cells.values().stream()
-                .filter(it -> it == Item.SAND)
+                .filter(it -> it == type)
                 .count();
     }
 
+    public int bottom() {
+        return bottom;
+    }
 }
