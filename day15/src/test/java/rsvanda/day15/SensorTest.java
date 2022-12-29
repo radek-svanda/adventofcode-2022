@@ -2,6 +2,9 @@ package rsvanda.day15;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SensorTest {
@@ -29,6 +32,16 @@ class SensorTest {
 
         assertFalse(sensor.covers(25, 10));
         assertTrue(sensor.covers(24, 10));
+    }
+
+    @Test
+    void streamTest() {
+        Stream<Long> range = Stream.concat(
+                LongStream.range(3, 5).boxed(),
+                LongStream.range(7, 11).boxed()
+        ).sorted().distinct();
+
+        range.forEach(System.out::println);
     }
 
 }
