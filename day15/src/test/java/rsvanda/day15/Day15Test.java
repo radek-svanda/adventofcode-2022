@@ -11,4 +11,9 @@ class Day15Test {
         assertEquals(4502208, new Day15.Part1().solve());
     }
 
+    @Test
+    void part2() {
+        assertEquals(13784551204480L, new Day15.Part2().solve());
+    }
+
 }

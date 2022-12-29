@@ -25,7 +25,7 @@ class IntervalTest {
     }
 
     @Nested
-    class IntTest {
+    class Append {
 
         @Test
         void size() {
@@ -53,6 +53,29 @@ class IntervalTest {
             assertEquals(7, interval.size());
         }
 
+    }
+
+    @Nested
+    class SubRange {
+
+        @Test
+        void subinterval() {
+            Interval interval = Interval.of(2, 4);
+            interval.append(Interval.of(5, 8));
+            Interval sub = interval.sub(0, 6);
+            assertEquals(5, sub.size());
+        }
+
+    }
+
+    @Test
+    void gap() {
+        Interval interval = Interval.of(2, 4);
+        interval.append(Interval.of(6, 8));
+        assertAll(
+                () -> assertEquals(1, interval.gaps().size()),
+                () -> assertEquals(5, interval.gaps().get(0))
+        );
     }
 
 }

@@ -44,6 +44,38 @@ public class Interval {
                 );
     }
 
+    public Interval sub(long min, long max) {
+
+        Interval other = new Interval();
+        ranges.stream()
+                .filter(range -> range.to >= min)
+                .filter(range -> range.from <= max)
+                .map(range -> {
+                    if (range.from < min) {
+                        range.from = min;
+                    }
+                    if (range.to > max) {
+                        range.to = max;
+                    }
+                    return range;
+                })
+                .forEach(other::append);
+
+        return other;
+    }
+
+    public List<Long> gaps() {
+        List<Long> res = new ArrayList<>();
+        for (int i = 1; i < ranges.size(); i++) {
+            Range curr = ranges.get(i);
+            Range prev = ranges.get(i - 1);
+            if (prev.to + 1 < curr.from) {
+                res.add(prev.to + 1);
+            }
+        }
+        return res;
+    }
+
     static final class Range implements Comparable<Range> {
         private long from;
         private long to;

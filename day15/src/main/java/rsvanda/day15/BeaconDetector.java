@@ -8,9 +8,12 @@ import java.util.List;
 public record BeaconDetector(List<Sensor> sensors, List<Beacon> beacons) {
 
     public long coveredOnRow(long y) {
-        List<Long> beaconX = beacons(y);
         // 40ms
-        Interval reduce = sensors.stream()
+        return interval(y).size() - beacons(y).size();
+    }
+
+    private Interval interval(long y) {
+        return sensors.stream()
                 .map(it -> it.interval(y))
                 .reduce(new Interval(),
                         (interval, interval2) -> {
@@ -18,7 +21,18 @@ public record BeaconDetector(List<Sensor> sensors, List<Beacon> beacons) {
                             return interval;
                         }
                 );
-        return reduce.size() - beaconX.size();
+    }
+
+    public long findFrequency(long from, long to) {
+        // 9sec
+        for (long y = from; y <= to; y++) {
+            Interval interval = interval(y).sub(from, to);
+            List<Long> gaps = interval.gaps();
+            if (!gaps.isEmpty()) {
+                return 4000000L * gaps.get(0) + y;
+            }
+        }
+        return -1;
     }
 
     boolean hasCover(long x, long y) {
