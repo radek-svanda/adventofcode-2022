@@ -14,6 +14,14 @@ public final class Sensor extends Point {
         this.range = distance(beacon);
     }
 
+    public long minX() {
+        return x() - range;
+    }
+
+    public long maxX() {
+        return x() + range;
+    }
+
     public boolean covers(long x, long y) {
         return distance(x, y) <= range;
     }

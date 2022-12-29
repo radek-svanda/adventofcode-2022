@@ -8,8 +8,7 @@ class Day15Test {
 
     @Test
     void part1() {
-        // 4062164
-        assertEquals(-2, new Day15.Part1().solve());
+        assertEquals(4502208, new Day15.Part1().solve());
     }
 
 }
