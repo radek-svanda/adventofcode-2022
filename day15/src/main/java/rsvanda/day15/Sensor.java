@@ -1,7 +1,5 @@
 package rsvanda.day15;
 
-import java.util.stream.LongStream;
-
 import static java.lang.Math.abs;
 
 public final class Sensor extends Point {
@@ -16,14 +14,6 @@ public final class Sensor extends Point {
         this.range = distance(beacon);
     }
 
-    public long minX() {
-        return x() - range;
-    }
-
-    public long maxX() {
-        return x() + range;
-    }
-
     public boolean covers(long x, long y) {
         return distance(x, y) <= range;
     }
@@ -36,13 +26,13 @@ public final class Sensor extends Point {
         return abs(x - x()) + abs(y - y());
     }
 
-    public LongStream intersection(long y) {
+    public Interval interval(long y) {
         if (!covers(x(), y)) {
-            return LongStream.empty();
+            return Interval.EMPTY;
         } else {
             long distance = distance(x(), y);
             long diff = range - distance;
-            return LongStream.range(x() - diff, x() + diff + 1);
+            return Interval.of(x() - diff, x() + diff);
         }
     }
 }

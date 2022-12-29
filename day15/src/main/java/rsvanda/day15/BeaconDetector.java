@@ -9,20 +9,20 @@ public record BeaconDetector(List<Sensor> sensors, List<Beacon> beacons) {
 
     public long coveredOnRow(long y) {
         List<Long> beaconX = beacons(y);
-        // 800ms
-        return sensors.stream()
-                .flatMapToLong(it -> it.intersection(y))
-                .distinct()
-                .filter(x -> !beaconX.contains(x))
-                .count();
+        // 40ms
+        Interval reduce = sensors.stream()
+                .map(it -> it.interval(y))
+                .reduce(new Interval(),
+                        (interval, interval2) -> {
+                            interval.append(interval2);
+                            return interval;
+                        }
+                );
+        return reduce.size() - beaconX.size();
     }
 
     boolean hasCover(long x, long y) {
         return sensors.stream().anyMatch(it -> it.covers(x, y));
-    }
-
-    private boolean hasBeacon(long x, long y) {
-        return beacons.stream().anyMatch(it -> it.x() == x && it.y() == y);
     }
 
     private List<Long> beacons(long y) {
@@ -34,7 +34,7 @@ public record BeaconDetector(List<Sensor> sensors, List<Beacon> beacons) {
         list.forEach(input -> input.sensor().beacon(input.beacon()));
         return new BeaconDetector(
                 list.stream().map(InputRow::sensor).toList(),
-                list.stream().map(InputRow::beacon).toList()
+                list.stream().map(InputRow::beacon).sorted().distinct().toList()
         );
     }
 }
